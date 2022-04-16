@@ -7,8 +7,7 @@ const Header = () => {
   return (
     <View style={styles.container}>
         <TouchableOpacity>
-            <Image style={styles.logo} source={require('../../assets/insta.png')}/>
-            {/* <Text style={styles.text}> Instagram </Text> */}
+            <Image style={styles.logo} source={require('../../assets/instaLogo.png')}/>
         </TouchableOpacity>
         <View style={styles.headerAction}>
             <TouchableOpacity>
