@@ -6,7 +6,7 @@ import PostFooter from './components/PostFooter'
 
 const Post = () => {
   return (
-    <View>
+    <View style={styles.post}>
         <PostHeader />
         <PostImage />
         <PostFooter />
@@ -16,4 +16,8 @@ const Post = () => {
 
 export default Post
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  post:{
+    // marginBottom: 30
+  }
+})

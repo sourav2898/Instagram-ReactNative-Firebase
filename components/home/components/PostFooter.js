@@ -29,7 +29,7 @@ const PostActions = () => {
       </View>
       <View>
         <TouchableOpacity>
-          <Image style={styles.actionIcon} source={require('../../../assets/icons8-square-wave-24.png')}/>
+          <Image style={styles.actionIcon} source={require('../../../assets/icons8-booking-24.png')}/>
         </TouchableOpacity>
       </View>
     </View>
@@ -48,7 +48,7 @@ export default PostFooter
 
 const styles = StyleSheet.create({
   footer:{
-    backgroundColor:'#111'
+    backgroundColor:'#111',
   },
   actions:{
     padding: 5,
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     justifyContent:'space-between'
   },
   actionIcon:{
-    marginRight:3
+    marginRight:7
   },
   text:{
     color:'#fff',

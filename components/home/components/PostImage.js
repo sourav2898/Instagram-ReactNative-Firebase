@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
   image:{
     width: '100%',
     height: 300,
-    resizeMode:'stretch',
-    backgroundColor:"#fff"
+    resizeMode:'stretch'
   }
 })
