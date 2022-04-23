@@ -3,18 +3,18 @@ import React from 'react'
 import ImagePicker from 'react-native-image-picker';
 import Body from './components/Body';
 
-const AddPost = () => {
+const AddPost = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Header />
+      <Header navigation={navigation}/>
       <Body />
     </View>
   )
 }
 
-const Header = () => (
+const Header = ({navigation}) => (
     <View style={styles.headerContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image style={styles.headerIcon} source={require('../../assets/icons8-left-24.png')}/> 
         </TouchableOpacity>
         <Text style={styles.headerText}> New Post </Text> 
@@ -25,10 +25,10 @@ export default AddPost
 
 const styles = StyleSheet.create({
     container:{
-        marginHorizontal: 10,
-        marginVertical: 5,
+        padding: 10,
         flexDirection: 'column',
-        height: '100%'
+        height: '100%', 
+        backgroundColor:'#111'
     },
     headerContainer:{
         flexDirection: 'row',

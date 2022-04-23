@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View, SafeAreaView,StatusBar } from 'react-native';
-import AddPost from './components/addPost/AddPost';
-import HomeScreen from './screens/HomeScreen';
+import { StyleSheet, Text, View,StatusBar } from 'react-native';
+import Navigation from './Navigation';
 
 export default function App() {
   return (
-      <SafeAreaView style={styles.container}>
-        <AddPost />
-      </SafeAreaView>
+    <View style={styles.container}>
+      <Navigation />
+    </View>
   )
 }
 
@@ -14,7 +13,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight,
-    backgroundColor:"#111"
+    backgroundColor:"#111",
+    height: '100%'
   },
   text: {
     fontSize: 25,

@@ -3,14 +3,14 @@ import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
-const Header = () => {
+const Header = ({navigation}) => {
   return (
     <View style={styles.container}>
         <TouchableOpacity>
             <Image style={styles.logo} source={require('../../assets/instaLogo.png')}/>
         </TouchableOpacity>
         <View style={styles.headerAction}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.push('AddPostScreen')}>
                 <Image style={styles.icon} source={require('../../assets/icons8-plus-math-24.png')}/>
             </TouchableOpacity>
             <TouchableOpacity>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
-        margin:10
+        margin:10,
     },
     text:{
         color:"#fff"

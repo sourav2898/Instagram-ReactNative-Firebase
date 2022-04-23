@@ -5,10 +5,10 @@ import Stories from '../components/home/Stories'
 import Post from '../components/home/Post'
 import BottomTabs from '../components/home/BottomTabs'
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   return (
       <View style={styles.home}>
-          <Header />
+          <Header navigation={navigation}/>
           <Stories />
           <ScrollView>
             <Post />
@@ -21,6 +21,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   home:{
     height:'100%',
+    backgroundColor:'#111',
   }
 })
 
