@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View, SafeAreaView,StatusBar } from 'react-native';
+import AddPost from './components/addPost/AddPost';
 import HomeScreen from './screens/HomeScreen';
 
 export default function App() {
   return (
       <SafeAreaView style={styles.container}>
-        <HomeScreen />
+        <AddPost />
       </SafeAreaView>
   )
 }
