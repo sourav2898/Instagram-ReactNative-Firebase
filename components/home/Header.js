@@ -7,7 +7,7 @@ const Header = ({navigation}) => {
   return (
     <View style={styles.container}>
         <TouchableOpacity>
-            <Image style={styles.logo} source={require('../../assets/instaLogo.png')}/>
+            <Text style={{color:'#fff',fontSize:25}}> Instagram </Text> 
         </TouchableOpacity>
         <View style={styles.headerAction}>
             <TouchableOpacity onPress={() => navigation.push('AddPostScreen')}>

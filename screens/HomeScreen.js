@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native'
+import { View, ScrollView, StyleSheet } from 'react-native'
 import React from 'react'
 import Header from '../components/home/Header'
 import Stories from '../components/home/Stories'
