@@ -17,6 +17,6 @@ export const bottomNavs = [
     },
     {
         name:'Profile',
-        activeIcon: require('../../../assets/icons8-home-24.png')
+        activeIcon: require('../../../assets/icons8-male-user-24.png')
     },
 ]

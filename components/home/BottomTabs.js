@@ -4,15 +4,20 @@ import { bottomNavs } from './helper/bottomTabIcons'
 
 const BottomTabs = () => {
 
-    const [selectedTab, setTab] = useState('Home')
+    const [selectedTab, setTab] = useState('Home');
+
+    const selectTab = (tabName) => {
+        // console.log(tabName);
+        setTab(tabName);
+    }
 
   return (
     <View style={styles.wrapper}>
         <View style={styles.container}>
             {bottomNavs.map((value,index) => {
                 return (
-                    <TouchableOpacity key={index}>
-                        <Image  style={styles.icon} source={value?.activeIcon}/>
+                    <TouchableOpacity key={index} onPress={() => selectTab(value.name)}>
+                        <Image  style={value?.name === selectedTab ? styles.activeIcon : styles.icon} source={value?.activeIcon}/>
                     </TouchableOpacity>
                 )
             })}
@@ -33,7 +38,13 @@ const styles = StyleSheet.create({
     },
     container:{
         flexDirection:'row',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+    },
+    activeIcon:{
+        width:30,
+        height:30,
+        backgroundColor: 'crimson',
+        borderRadius: 30
     },
     icon:{
         width:30,
