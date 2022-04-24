@@ -11,6 +11,7 @@ const uploadSchema = Yup.object().shape({
 
 const login = async(email,password) => {
     try {
+        console.log(email,password);
         await auth.signInWithEmailAndPassword(email,password);
         console.log("firebase login successful", email, password);
     } catch (error) {

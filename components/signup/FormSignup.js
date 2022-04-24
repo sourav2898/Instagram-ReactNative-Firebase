@@ -14,7 +14,7 @@ const signUp = async(email,username,password) => {
     try {
         console.log("inside signup")
         const authUser = await auth.createUserWithEmailAndPassword(email,password);
-
+        console.log(email,password);
         await db.collection('users').doc(authUser.user.email).set({
             owner_id: authUser.user.uid,
             username: username,

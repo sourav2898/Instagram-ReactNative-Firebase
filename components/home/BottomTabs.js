@@ -17,7 +17,7 @@ const BottomTabs = () => {
             {bottomNavs.map((value,index) => {
                 return (
                     <TouchableOpacity key={index} onPress={() => selectTab(value.name)}>
-                        <Image  style={value?.name === selectedTab ? styles.activeIcon : styles.icon} source={value?.activeIcon}/>
+                        <Image style={styles.icon} source={value?.name === selectedTab ? value?.activeIcon : value?.inactiveIcon}/>
                     </TouchableOpacity>
                 )
             })}
@@ -38,13 +38,11 @@ const styles = StyleSheet.create({
     },
     container:{
         flexDirection:'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-around'
     },
     activeIcon:{
         width:30,
         height:30,
-        backgroundColor: 'crimson',
-        borderRadius: 30
     },
     icon:{
         width:30,

@@ -15,21 +15,21 @@ const handleSignOut = async() => {
 const Header = ({navigation}) => {
   return (
     <View style={styles.container}>
-        <TouchableOpacity onPress={handleSignOut}>
+        <TouchableOpacity >
             <Text style={{color:'#fff',fontSize:25}}> Instagram </Text> 
         </TouchableOpacity>
         <View style={styles.headerAction}>
             <TouchableOpacity onPress={() => navigation.push('AddPostScreen')}>
-                <Image style={styles.icon} source={require('../../assets/icons8-plus-math-24.png')}/>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Image style={styles.icon} source={require('../../assets/icons8-heart-24.png')}/>
+                <Image style={styles.icon} source={require('../../assets/add_post.png')}/>
             </TouchableOpacity>
             <TouchableOpacity>
                 <View style={styles.badge}>
                     <Text style={styles.badgeText}> 11 </Text>
                 </View>
                 <Image style={styles.icon} source={require('../../assets/icons8-facebook-messenger-24.png')}/>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleSignOut}>
+                <Image style={styles.icon} source={require('../../assets/signout.png')}/>
             </TouchableOpacity>
         </View>
     </View>
