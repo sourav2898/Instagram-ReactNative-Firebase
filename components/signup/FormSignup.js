@@ -1,20 +1,41 @@
-import { StyleSheet, Text, View, Image, Button, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, Button, TextInput, TouchableOpacity,Alert } from 'react-native'
 import React from 'react'
 import * as Yup from 'yup';
 import {Formik} from 'formik';
+import {auth, db} from '../../firebase'
 
 const uploadSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email. Please enter a valid email.').required('Email is required.'),
     password: Yup.string().required('A password is required.'),
     username: Yup.string().required('Username is required.')
 }) 
+
+const signUp = async(email,username,password) => {
+    try {
+        console.log("inside signup")
+        const authUser = await auth.createUserWithEmailAndPassword(email,password);
+
+        await db.collection('users').doc(authUser.user.email).set({
+            owner_id: authUser.user.uid,
+            username: username,
+            email: email,
+            profile_pic: ''
+        })
+
+        
+        console.log("Firebase User Created Successfully");
+    } catch (error) {
+        console.log("error Signup",error);
+        Alert.alert("Error while signing up",error.message);
+    }
+}
+
 const FormSignUp = ({navigation}) => {
   return (
     <Formik 
             initialValues={{password:'', email:'', username:''}}
-            onSubmit={(values,errors) => {
-                console.log(values);
-                console.log(errors);
+            onSubmit={(values) => {
+                signUp(values.email,values.username,values.password)
             }}
             validationSchema = {uploadSchema}
             validateOnMount={true}

@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View,StatusBar } from 'react-native';
-import Navigation from './Navigation';
+import AuthNavigation from './Navigation/AuthNavigation';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Navigation />
+      <AuthNavigation />
     </View>
   )
 }

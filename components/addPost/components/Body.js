@@ -1,31 +1,70 @@
-import { StyleSheet, Text, View, Button, TextInput, Image } from 'react-native'
-import React , {useState} from 'react'
+import { StyleSheet, Text, View, Button, TextInput, Image, Alert } from 'react-native'
+import React , {useEffect, useState} from 'react'
 import * as Yup from 'yup';
 import {Formik} from 'formik';
+import { auth,db } from '../../../firebase';
 
 const uploadSchema = Yup.object().shape({
     imageUrl: Yup.string().url('Input text should be an url of an image'),
     caption: Yup.string().required('A caption is required.')
 }) 
 
-
-const Body = () => {
+const Body = ({navigation}) => {
 
     const [thumbnail, setThumbnail] = useState('');
+    const [currentUser, setCurrentUser] = useState({});
+
+    const getUser = () => {
+        const user = auth.currentUser;
+        const unsubscribe = db.collection('users').where('owner_id','==',user.uid).limit(1).onSnapshot(snapshot => {
+                                snapshot.docs.map(doc => setCurrentUser({
+                                    username: doc.data().username,
+                                    useremail: doc.data().email
+                                }))
+                            })
+
+        return unsubscribe;
+    }
+
+    useEffect(() => {
+        getUser();
+    },[])
+
+    const postToFirebase = (imageUrl, caption) => {
+        const unsubscribe = db.collection('users')
+                                .doc(auth.currentUser.email)
+                                .collection('posts')
+                                .add({
+                                    imageUrl: imageUrl,
+                                    caption: caption,
+                                    user: currentUser.username,
+                                    email: currentUser.useremail,
+                                    owner_id: auth.currentUser.uid,
+                                    likes: 0,
+                                    likes_by_users: [],
+                                    comments: []
+                                })
+                                .then(() => navigation.goBack())
+                                .catch(err => {
+                                    console.log("error posting", err);
+                                    Alert.alert("Error: Not able to post", err);
+                                })
+
+        return unsubscribe
+    }
 
   return (
         <Formik 
             initialValues={{caption:'', imageUrl:''}}
-            onSubmit={(values,errors) => {
-                console.log(values);
-                console.log(errors)
+            onSubmit={(values) => {
+                postToFirebase(values.imageUrl, values.caption)
             }}
             validationSchema = {uploadSchema}
             validateOnMount={true}
         >
             {
                 ({
-                    handleBlur,handleChange,handleSubmit,values,errors,isValid
+                    handleBlur,handleChange,handleSubmit,values,errors,isValid, touched
                 }) => (
                 <>
                     <TextInput 
@@ -42,7 +81,7 @@ const Body = () => {
                         onBlur={handleBlur('caption')}
                     />
                     {
-                        errors.caption && 
+                        errors.caption && touched.caption &&
                         <Text style={styles.error}> 
                             {errors.caption}
                         </Text>

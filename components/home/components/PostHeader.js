@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View,Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-const PostHeader = () => {
+const PostHeader = ({data}) => {
   return (
     <View style={styles.postHeader}>
       <View style={{flexDirection:'row', alignItems:'center'}}>
         <Image style={styles.dp} source={{uri:"https://pbs.twimg.com/profile_images/864282616597405701/M-FEJMZ0_400x400.jpg"}}/>
-        <Text style={styles.text}> Sundar </Text>
+        <Text style={styles.text}> {data?.user || 'dummy user'} </Text>
       </View>
       <View>
         <TouchableOpacity>

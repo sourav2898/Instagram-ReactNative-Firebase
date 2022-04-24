@@ -1,12 +1,21 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity,Alert } from 'react-native'
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {auth} from '../../firebase';
 
+const handleSignOut = async() => {
+    try {
+        await auth.signOut();
+    } catch (error) {
+        console.log(error)
+        Alert.alert(error.message);
+    }
+}
 
 const Header = ({navigation}) => {
   return (
     <View style={styles.container}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleSignOut}>
             <Text style={{color:'#fff',fontSize:25}}> Instagram </Text> 
         </TouchableOpacity>
         <View style={styles.headerAction}>

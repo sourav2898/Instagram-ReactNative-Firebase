@@ -7,7 +7,7 @@ const AddPost = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Header navigation={navigation}/>
-      <Body />
+      <Body navigation={navigation}/>
     </View>
   )
 }

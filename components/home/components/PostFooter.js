@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View,TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 
-const PostFooter = () => {
+const PostFooter = ({data}) => {
   return (
     <View style={styles.footer}>
       <PostActions />
-      <Text style={styles.text}>1234 likes </Text> 
-      <Text style={styles.text}>Sundar <Text style={styles.span}>This is Sundar Pichai, CEO of Google from India. Best of luck, Keep working hard.</Text> </Text>
-      <Text style={styles.secText}>View All Comments </Text>
-      <Comments />
+      <Text style={styles.text}>{data?.likes_by_users.length || 0} {data?.likes_by_users.length > 1 ? 'likes' : 'like'} </Text> 
+      <Text style={styles.text}>{data?.user || 'dummy user'} <Text style={styles.span}>{data?.caption || 'No caption.'}</Text> </Text>
+      <Text style={styles.secText}>{ data?.comments.length > 0 && 'View All'} {data?.comments.length} Comments </Text>
+      <Comments data={data}/>
     </View>
   )
 }
@@ -36,11 +36,19 @@ const PostActions = () => {
   )
 }
 
-const Comments = () => {
+const Comments = ({data}) => {
   return(
-    <View>
-      <Text style={styles.text}>Sundar <Text style={styles.span}>This is Sundar Pichai, CEO of Google from India. Best of luck, Keep working hard.</Text> </Text>
-    </View>
+    <>
+    {
+      data?.comments?.map(
+          value => (
+            <View>
+              <Text style={styles.text}>{value?.user || 'Dummy User'} <Text style={styles.span}>{value?.comment}</Text> </Text>
+            </View>
+          )
+      )
+    }
+    </>
   )
 }
 
