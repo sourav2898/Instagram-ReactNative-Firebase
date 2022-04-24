@@ -5,10 +5,13 @@ import {Formik} from 'formik';
 import {auth} from '../../firebase';
 
 const uploadSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email. Please enter a valid email.').required('Email is required.'),
-    password: Yup.string().required('A password is required.')
+    email: Yup.string().email('Invalid email. Please enter a valid email*').required('Email is required*'),
+    password: Yup.string().required('A password is required*')
 }) 
 
+const Form = ({navigation}) => {
+
+    
 const login = async(email,password) => {
     try {
         console.log(email,password);
@@ -18,8 +21,17 @@ const login = async(email,password) => {
         Alert.alert(error.message);
     }
 }
-
-const Form = ({navigation}) => {
+    
+const forgotPassword = () => {
+    Alert.alert(
+        "Sorry this functionality is not available right now.",
+        " You can try creating a new user by clicking on signup.",
+        [
+        {text: 'OK'},
+        {text: 'SignUp', onPress: () => navigation.push('SignUpScreen')}
+        ]
+    )
+}
   return (
     <Formik 
             initialValues={{password:'', email:''}}
@@ -35,8 +47,8 @@ const Form = ({navigation}) => {
                 }) => (
                 <>
                     <TextInput 
-                        style={styles.textInput} 
-                        placeholder='Enter Your EmailId' 
+                        style={errors.email && touched.email ? styles.errorTextInput : styles.textInput} 
+                        placeholder='Enter Your Email Id' 
                         placeholderTextColor='gray' 
                         value={values.email}
                         onChangeText={handleChange('email')}
@@ -51,7 +63,7 @@ const Form = ({navigation}) => {
                     }
                     <TextInput 
                         secureTextEntry={true}
-                        style={styles.textInput} 
+                        style={errors.password && touched.password ? styles.errorTextInput : styles.textInput} 
                         placeholder='Enter your password' 
                         placeholderTextColor='gray' 
                         value={values.password}
@@ -65,7 +77,9 @@ const Form = ({navigation}) => {
                         </Text>
                     }
                     
-                    <Button onPress={handleSubmit}  title="Login" />
+                    <View style={styles.button}>
+                        <Button onPress={handleSubmit}  title="Login" />
+                    </View>
                     
                     
                     <TouchableOpacity>
@@ -74,7 +88,7 @@ const Form = ({navigation}) => {
                         <Text style={{color:'#ADD8E6'}} onPress={() => navigation.push('SignUpScreen')}> Sign Up </Text>
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={forgotPassword}>
                         <Text style={{color:'#ADD8E6'}}> Forgot Password? </Text>
                     </TouchableOpacity>
                 </>
@@ -96,11 +110,29 @@ const styles = StyleSheet.create({
         borderColor: 'lightgray',
         borderWidth: 1,
         borderRadius: 5,
-        marginVertical: 5,
+        marginTop: 5,
+        fontSize: 15,
+        width:'90%',
+    },
+    errorTextInput:{
+        color: 'gray',
+        padding: 10,
+        borderColor: 'crimson',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginTop: 5,
         fontSize: 15,
         width:'90%',
     },
     error:{
-        color: 'crimson'
+        color: 'crimson',
+        fontSize: 12,
+        marginBottom: 5,
+        width: "90%"
     },
+    button:{
+        width: '90%',
+        marginTop: 10,
+        marginBottom: 5,
+    }
 })

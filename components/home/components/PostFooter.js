@@ -29,7 +29,7 @@ const PostActions = () => {
       </View>
       <View>
         <TouchableOpacity>
-          <Image style={styles.actionIcon} source={require('../../../assets/icons8-booking-24.png')}/>
+          <Image style={styles.actionIcon} source={require('../../../assets/notsaved.png')}/>
         </TouchableOpacity>
       </View>
     </View>

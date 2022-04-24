@@ -5,7 +5,7 @@ import {Formik} from 'formik';
 import { auth,db } from '../../../firebase';
 
 const uploadSchema = Yup.object().shape({
-    imageUrl: Yup.string().url('Input text should be an url of an image'),
+    imageUrl: Yup.string().url('Input text should be an url of an image').required('Image Url is required'),
     caption: Yup.string().required('A caption is required.')
 }) 
 
@@ -68,8 +68,8 @@ const Body = ({navigation}) => {
                 }) => (
                 <>
                     <TextInput 
-                        style={styles.textInput} 
-                        placeholder='Write a caption' 
+                        style={errors.caption && touched.caption ? styles.errorTextInput : styles.textInput} 
+                        placeholder="Write a caption. What's in your mind?" 
                         placeholderTextColor='gray' 
                         multiline={true} 
                         maxLength={2000}
@@ -88,8 +88,8 @@ const Body = ({navigation}) => {
                     }
                    
                     <TextInput 
-                        style={styles.textInput} 
-                        placeholder='Image Url' 
+                        style={errors.imageUrl && touched.imageUrl ? styles.errorTextInput : styles.textInput} 
+                        placeholder="Image Url, Url of picture you want to upload."
                         placeholderTextColor='gray' 
                         value={values.imageUrl}
                         onChangeText={handleChange('imageUrl')}
@@ -97,7 +97,7 @@ const Body = ({navigation}) => {
                     />
 
                     {
-                        errors.imageUrl && 
+                        errors.imageUrl && touched.imageUrl &&
                         <Text style={styles.error}> 
                             {errors.imageUrl}
                         </Text>
@@ -123,11 +123,22 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 5,
-        marginVertical: 5,
+        marginTop: 10,
+        fontSize: 15
+    },
+    errorTextInput:{
+        color: 'gray',
+        padding: 10,
+        borderColor: 'crimson',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginTop: 10,
         fontSize: 15
     },
     error:{
-        color: 'red'
+        color: 'crimson',
+        fontSize: 12,
+        marginBottom: 10
     },
     image:{
         width: 150,
