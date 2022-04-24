@@ -56,6 +56,7 @@ const FormSignUp = ({navigation}) => {
                     }
 
                     <TextInput 
+                        secureTextEntry={true}
                         style={styles.textInput} 
                         placeholder='Password' 
                         placeholderTextColor='gray' 

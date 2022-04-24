@@ -49,6 +49,7 @@ const Form = ({navigation}) => {
                         </Text>
                     }
                     <TextInput 
+                        secureTextEntry={true}
                         style={styles.textInput} 
                         placeholder='Enter your password' 
                         placeholderTextColor='gray' 
