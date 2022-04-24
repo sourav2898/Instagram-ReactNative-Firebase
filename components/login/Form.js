@@ -1,19 +1,29 @@
-import { StyleSheet, Text, View, Image, Button, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, Button, TextInput, TouchableOpacity,Alert } from 'react-native'
 import React from 'react'
 import * as Yup from 'yup';
 import {Formik} from 'formik';
+import {auth} from '../../firebase';
 
 const uploadSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email. Please enter a valid email.').required('Email is required.'),
     password: Yup.string().required('A password is required.')
 }) 
+
+const login = async(email,password) => {
+    try {
+        await auth.signInWithEmailAndPassword(email,password);
+        console.log("firebase login successful", email, password);
+    } catch (error) {
+        Alert.alert(error.message);
+    }
+}
+
 const Form = ({navigation}) => {
   return (
     <Formik 
             initialValues={{password:'', email:''}}
-            onSubmit={(values,errors) => {
-                console.log(values);
-                console.log(errors);
+            onSubmit={(values) => {
+                login(values.email, values.password);
             }}
             validationSchema = {uploadSchema}
             validateOnMount={true}
@@ -53,7 +63,7 @@ const Form = ({navigation}) => {
                         </Text>
                     }
                     
-                    <Button style={{width:"100%"}} onPress={handleSubmit}  title="Login" />
+                    <Button onPress={handleSubmit}  title="Login" />
                     
                     
                     <TouchableOpacity>
@@ -86,7 +96,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginVertical: 5,
         fontSize: 15,
-        width:'100%',
+        width:'90%',
     },
     error:{
         color: 'crimson'
