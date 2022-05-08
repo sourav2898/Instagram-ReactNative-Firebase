@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import {db,auth} from '../../../firebase'
 import { async } from '@firebase/util';
 
-const PostFooter = ({data, updateComment}) => {
+const PostFooter = ({data, updateComment, updateLike}) => {
 
   const[liked, setLiked] = useState(false);
   const[saved, setSaved] = useState(false);
@@ -91,7 +91,7 @@ const PostFooter = ({data, updateComment}) => {
 
   return (
     <View style={styles.footer}>
-      <PostActions liked={liked} savePost={savePost} saved={saved}/>
+      <PostActions data={data} liked={liked} savePost={savePost} saved={saved} updateLike={updateLike}/>
       <Text style={styles.text}>{data?.likes_by_users.length || 0} {data?.likes_by_users.length > 1 ? 'likes' : 'like'} </Text> 
       <Text style={styles.text}>{data?.user || 'dummy user'} <Text style={styles.span}>{data?.caption || 'No caption.'}</Text> </Text>
       <Text style={styles.secText}>{ data?.comments.length > 0 && 'View All'} {data?.comments.length} Comments </Text>
@@ -126,11 +126,11 @@ const PostFooter = ({data, updateComment}) => {
   )
 }
 
-const PostActions = ({liked,savePost,saved}) => {
+const PostActions = ({data, liked,savePost,saved, updateLike}) => {
   return (
     <View style={styles.actions}>
       <View style={{flexDirection:'row'}}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => updateLike(data)}>
           {
             liked ? 
             <Image style={styles.actionIcon} source={require('../../../assets/post_liked.png')}/>

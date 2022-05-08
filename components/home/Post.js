@@ -50,7 +50,7 @@ const Post = ({data}) => {
     <View style={styles.post}>
         <PostHeader data={data}/>
         <PostImage updateLike={updateLike} data={data}/>
-        <PostFooter data={data} updateComment={updateComment}/>
+        <PostFooter data={data} updateLike={updateLike} updateComment={updateComment}/>
     </View>
   )
 }
