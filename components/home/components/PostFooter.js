@@ -1,10 +1,12 @@
 import { StyleSheet,ActivityIndicator, Text, TextInput, View,TouchableOpacity, Image, Button, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import {db,auth} from '../../../firebase'
+import { async } from '@firebase/util';
 
 const PostFooter = ({data, updateComment}) => {
 
   const[liked, setLiked] = useState(false);
+  const[saved, setSaved] = useState(false);
   const [comment, setComment] = useState('');
   const [user, setUser] = useState('');
   const [loading, isLoading] = useState(false);
@@ -13,7 +15,8 @@ const PostFooter = ({data, updateComment}) => {
     const likes = data?.likes_by_users;
     setLiked(likes.includes(auth.currentUser.email))
 
-    getuser();
+    getuser();  
+    getSavedPost();
   },[data])
 
   const getuser = async() => {
@@ -21,6 +24,15 @@ const PostFooter = ({data, updateComment}) => {
       const arr = snapshot.docs.map(doc => doc.data());
 
       setUser(arr.filter((val) => val.email === auth.currentUser.email)[0].username);
+    });
+  }
+
+  const getSavedPost = async() => {
+      await db.collection('users').doc(auth.currentUser.email).collection("savedPosts").onSnapshot(snapshot => {
+        const posts = snapshot.docs.map(doc => doc.data());
+        
+        if(posts.find(val => val.docId === data.docId)) setSaved(true);
+        else setSaved(false);
     });
   }
 
@@ -39,10 +51,47 @@ const PostFooter = ({data, updateComment}) => {
     
   }
 
+  const savePost = async() => {
+    if(saved){
+       const unsubscribe = await db.collection('users')
+                              .doc(auth.currentUser.email)
+                              .collection('savedPosts')
+                              .doc(data.docId)
+                              .delete()
+                              .then(() => {
+                                setSaved(false);
+                                Alert.alert("Post unsaved successfully")
+                              })
+                              .catch(err => {
+                                  console.log("error un-saving post", err);
+                                  Alert.alert("Error: Not able to un save post. Please try later");
+                              })
+
+      return unsubscribe
+    }
+    else{
+      const unsubscribe = await db.collection('users')
+                              .doc(auth.currentUser.email)
+                              .collection('savedPosts')
+                              .doc(data.docId)
+                              .set({
+                                  ...data,
+                                  postId: data.docId
+                              })
+                              .then(() => Alert.alert("Post saved successfully"))
+                              .catch(err => {
+                                  console.log("error saving post", err);
+                                  Alert.alert("Error: Not able to save post. Please try later");
+                              })
+
+      return unsubscribe
+    } 
+  }
+
 
   return (
     <View style={styles.footer}>
-      <PostActions liked={liked}/>
+      <PostActions liked={liked} savePost={savePost} saved={saved}/>
       <Text style={styles.text}>{data?.likes_by_users.length || 0} {data?.likes_by_users.length > 1 ? 'likes' : 'like'} </Text> 
       <Text style={styles.text}>{data?.user || 'dummy user'} <Text style={styles.span}>{data?.caption || 'No caption.'}</Text> </Text>
       <Text style={styles.secText}>{ data?.comments.length > 0 && 'View All'} {data?.comments.length} Comments </Text>
@@ -77,7 +126,7 @@ const PostFooter = ({data, updateComment}) => {
   )
 }
 
-const PostActions = ({liked}) => {
+const PostActions = ({liked,savePost,saved}) => {
   return (
     <View style={styles.actions}>
       <View style={{flexDirection:'row'}}>
@@ -97,8 +146,13 @@ const PostActions = ({liked}) => {
         </TouchableOpacity>
       </View>
       <View>
-        <TouchableOpacity>
-          <Image style={styles.actionIcon} source={require('../../../assets/notsaved.png')}/>
+        <TouchableOpacity onPress={savePost}>
+          {
+            saved?
+            <Image style={styles.actionIcon} source={require('../../../assets/saved.png')}/>
+            :
+            <Image style={styles.actionIcon} source={require('../../../assets/notsaved.png')}/>
+          }
         </TouchableOpacity>
       </View>
     </View>
