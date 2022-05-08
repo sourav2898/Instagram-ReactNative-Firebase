@@ -1,15 +1,43 @@
-import { StyleSheet, Text, View,TouchableOpacity, Image } from 'react-native'
+import { StyleSheet,ActivityIndicator, Text, TextInput, View,TouchableOpacity, Image, Button, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import {auth} from '../../../firebase'
+import {db,auth} from '../../../firebase'
 
-const PostFooter = ({data}) => {
+const PostFooter = ({data, updateComment}) => {
 
   const[liked, setLiked] = useState(false);
+  const [comment, setComment] = useState('');
+  const [user, setUser] = useState('');
+  const [loading, isLoading] = useState(false);
 
   useEffect(() => {
     const likes = data?.likes_by_users;
     setLiked(likes.includes(auth.currentUser.email))
+
+    getuser();
   },[data])
+
+  const getuser = async() => {
+    await db.collection('users').onSnapshot(snapshot => {
+      const arr = snapshot.docs.map(doc => doc.data());
+
+      setUser(arr.filter((val) => val.email === auth.currentUser.email)[0].username);
+    });
+  }
+
+  const addComment = async () => {
+    isLoading(true);
+    await updateComment(data,{user: user, comment: comment})
+    .then(() => {
+      setComment('');
+      isLoading(false);
+    })
+    .catch((err) => {
+      console.log(err);
+      Alert.alert("Sorry unable to post comment, please try later.");
+      isLoading(false);
+    });
+    
+  }
 
 
   return (
@@ -18,7 +46,33 @@ const PostFooter = ({data}) => {
       <Text style={styles.text}>{data?.likes_by_users.length || 0} {data?.likes_by_users.length > 1 ? 'likes' : 'like'} </Text> 
       <Text style={styles.text}>{data?.user || 'dummy user'} <Text style={styles.span}>{data?.caption || 'No caption.'}</Text> </Text>
       <Text style={styles.secText}>{ data?.comments.length > 0 && 'View All'} {data?.comments.length} Comments </Text>
-      <Comments data={data}/>
+      <Comments data={data} />
+      <View style={styles.commentSction}>
+        {
+          loading
+          ?
+          <ActivityIndicator size="small" color="#0000ff" />
+          :
+          <>
+            <TextInput 
+              style={styles.textInput}
+              placeholder='Add a comment' 
+              placeholderTextColor='#777' 
+              multiline={true} 
+              maxLength={2000}
+              editable
+              value={comment}
+              onChangeText={(value) => setComment(value)}
+            />
+            <Button   
+              onPress={addComment}
+              title="Post"
+              color="crimson"
+              disabled={comment.trim() === ''}
+            />
+          </>
+      }
+      </View>
     </View>
   )
 }
@@ -57,8 +111,8 @@ const Comments = ({data}) => {
     {
       data?.comments?.map(
           value => (
-            <View>
-              <Text style={styles.text}>{value?.user || 'Dummy User'} <Text style={styles.span}>{value?.comment}</Text> </Text>
+            <View style={{flexDirection:'row', alignItems:'center'}}>
+              <Text style={{...styles.text, marginLeft: 5}}>{value?.user || 'Dummy User'} <Text style={styles.span}>{value?.comment}</Text> </Text>
             </View>
           )
       )
@@ -85,7 +139,7 @@ const styles = StyleSheet.create({
     color:'#fff',
     fontWeight: 'bold',
     padding: 5,
-    paddingTop:0
+    paddingTop:0,
   },
   secText:{
     color:'#333',
@@ -95,6 +149,19 @@ const styles = StyleSheet.create({
   },
   span:{
     fontWeight:'500',
-    fontSize:12
+    fontSize:12,
+    color:'lightgray'
+  },
+  commentSction:{
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    marginHorizontal: 5
+  },
+  textInput:{
+    color:'#fff',
+    padding: 5,
+    paddingTop:0,
+    flex:1
   }
 })

@@ -12,7 +12,6 @@ const Post = ({data}) => {
   },[])
 
   const updateLike = async(data) => {
-    
     let likd_user = data.likes_by_users;
     if(likd_user.includes(auth.currentUser.email)){
         likd_user = likd_user.filter((email) => {
@@ -32,11 +31,26 @@ const Post = ({data}) => {
     })
   }
 
+  const updateComment = async(data,comment) => {
+
+    let comments = [...data?.comments, comment]
+    console.log(comments)
+
+    await db.collection('users').doc(data.email).collection('posts').doc(data.docId)
+    .update({
+      comments: comments
+    }).then(() => {
+      console.log("Document successfully updated");
+    }).catch((err) => {
+      console.log("Error while updating document", err);
+    })
+  }
+
   return (
     <View style={styles.post}>
         <PostHeader data={data}/>
         <PostImage updateLike={updateLike} data={data}/>
-        <PostFooter data={data}/>
+        <PostFooter data={data} updateComment={updateComment}/>
     </View>
   )
 }
