@@ -5,7 +5,7 @@ const PostHeader = ({data}) => {
   return (
     <View style={styles.postHeader}>
       <View style={{flexDirection:'row', alignItems:'center'}}>
-        <Image style={styles.dp} source={{uri:"https://pbs.twimg.com/profile_images/864282616597405701/M-FEJMZ0_400x400.jpg"}}/>
+        <Image style={styles.dp} source={require('../../../assets/default_dp.png')}/>
         <Text style={styles.text}> {data?.user || 'dummy user'} </Text>
       </View>
       <View>

@@ -1,10 +1,22 @@
 import { StyleSheet, Text, View,Image } from 'react-native'
 import React from 'react'
 
-const PostImage = () => {
+const PostImage = ({data, updateLike}) => {
+  let lastPress = '';
+  const onDoublePress = () => {
+        const time = new Date().getTime();
+        const delta = time - lastPress;
+
+        const DOUBLE_PRESS_DELAY = 400;
+        if (delta < DOUBLE_PRESS_DELAY) {
+            updateLike(data)
+        }
+        lastPress = time;
+    };
   return (
-    <View>
-      <Image style={styles.image} source={{uri:'https://pbs.twimg.com/profile_images/864282616597405701/M-FEJMZ0_400x400.jpg'}}/>
+    <View onStartShouldSetResponder =
+        {(evt) => onDoublePress()}>
+      <Image style={styles.image} source={data?.imageUrl.trim()!=='' ? {uri:data?.imageUrl} : require('../../../assets/no_image.jpg')}/>
     </View>
   )
 }

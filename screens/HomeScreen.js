@@ -12,9 +12,9 @@ const HomeScreen = ({navigation, currentUser}) => {
 
   useEffect( async() => {
     await db.collectionGroup('posts').onSnapshot(snapshot => {
-      setPosts(snapshot.docs.map(doc => doc.data()));
+
+      setPosts(snapshot.docs.map(doc => {return {'docId':doc.id,...doc.data()}}));
     })
-     console.log("posts",posts)
   },[])
 
   return (
@@ -24,8 +24,8 @@ const HomeScreen = ({navigation, currentUser}) => {
           <ScrollView>
             {
               posts?.map((value,index) => {
-              return <Post key={index} data={value}/>
-            })
+                return <Post key={index} data={value} />
+              })
             }
           </ScrollView>
           <BottomTabs />

@@ -1,10 +1,20 @@
 import { StyleSheet, Text, View,TouchableOpacity, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import {auth} from '../../../firebase'
 
 const PostFooter = ({data}) => {
+
+  const[liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    const likes = data?.likes_by_users;
+    setLiked(likes.includes(auth.currentUser.email))
+  },[data])
+
+
   return (
     <View style={styles.footer}>
-      <PostActions />
+      <PostActions liked={liked}/>
       <Text style={styles.text}>{data?.likes_by_users.length || 0} {data?.likes_by_users.length > 1 ? 'likes' : 'like'} </Text> 
       <Text style={styles.text}>{data?.user || 'dummy user'} <Text style={styles.span}>{data?.caption || 'No caption.'}</Text> </Text>
       <Text style={styles.secText}>{ data?.comments.length > 0 && 'View All'} {data?.comments.length} Comments </Text>
@@ -13,12 +23,17 @@ const PostFooter = ({data}) => {
   )
 }
 
-const PostActions = () => {
+const PostActions = ({liked}) => {
   return (
     <View style={styles.actions}>
       <View style={{flexDirection:'row'}}>
         <TouchableOpacity>
-          <Image style={styles.actionIcon} source={require('../../../assets/icons8-heart-24.png')}/>
+          {
+            liked ? 
+            <Image style={styles.actionIcon} source={require('../../../assets/post_liked.png')}/>
+            :
+            <Image style={styles.actionIcon} source={require('../../../assets/icons8-heart-24.png')}/>
+          }
         </TouchableOpacity>
         <TouchableOpacity>
           <Image style={styles.actionIcon} source={require('../../../assets/icons8-speech-24.png')}/>
