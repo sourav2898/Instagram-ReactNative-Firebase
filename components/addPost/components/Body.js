@@ -5,7 +5,7 @@ import {Formik} from 'formik';
 import { auth,db } from '../../../firebase';
 
 const uploadSchema = Yup.object().shape({
-    imageUrl: Yup.string().url('Input text should be an url of an image').required('Image Url is required'),
+    // imageUrl: Yup.string().url('Input text should be an url of an image').required('Image Url is required'),
     caption: Yup.string().required('A caption is required.')
 }) 
 

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, Button, TextInput, TouchableOpacity,Alert } from 'react-native'
-import React from 'react'
+import { StyleSheet, ActivityIndicator,  Text, View, Image, Button, TextInput, TouchableOpacity,Alert } from 'react-native'
+import React, {useState} from 'react'
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import {auth, db} from '../../firebase'
@@ -10,27 +10,35 @@ const uploadSchema = Yup.object().shape({
     username: Yup.string().required('Username is required*')
 }) 
 
-const signUp = async(email,username,password) => {
-    try {
-        console.log("inside signup")
-        const authUser = await auth.createUserWithEmailAndPassword(email,password);
-        console.log(email,password);
-        await db.collection('users').doc(authUser.user.email).set({
-            owner_id: authUser.user.uid,
-            username: username,
-            email: email,
-            profile_pic: ''
-        })
 
-        
-        console.log("Firebase User Created Successfully");
-    } catch (error) {
-        console.log("error Signup",error);
-        Alert.alert("Error while signing up",error.message);
-    }
-}
 
 const FormSignUp = ({navigation}) => {
+
+    const [loading, isLoading] = useState(false);
+
+    const signUp = async(email,username,password) => {
+        
+            isLoading(true);
+        try {
+            console.log("inside signup")
+            const authUser = await auth.createUserWithEmailAndPassword(email,password);
+            console.log(email,password);
+            await db.collection('users').doc(authUser.user.email).set({
+                owner_id: authUser.user.uid,
+                username: username,
+                email: email,
+                profile_pic: ''
+            })
+
+            
+            isLoading(false);
+            console.log("Firebase User Created Successfully");
+        } catch (error) {
+            isLoading(false);
+            console.log("error Signup",error);
+            Alert.alert("Error while signing up",error.message);
+        }
+    }
   return (
     <Formik 
             initialValues={{password:'', email:'', username:''}}
@@ -91,18 +99,25 @@ const FormSignUp = ({navigation}) => {
                             {errors.password}
                         </Text>
                     }
-                    
-                    <View style={styles.button}>
-                        <Button onPress={handleSubmit}  title="Sign Up" />
-                    </View>
-                    
-                    
-                    <TouchableOpacity>
-                        <Text>
-                            Already have an account?
-                        <Text style={{color:'#ADD8E6'}} onPress={() => navigation.push('LogInScreen')}> Login </Text>
-                        </Text>
-                    </TouchableOpacity>
+                    {
+                            loading
+                            ?
+                            <ActivityIndicator size="large" color='#ADD8E6'/>
+                            :
+                            <>
+                            <View style={styles.button}>
+                                    <Button onPress={handleSubmit}  title="Sign Up" />
+                            </View>
+                            
+                            
+                            <TouchableOpacity>
+                                <Text>
+                                    Already have an account?
+                                <Text style={{color:'#ADD8E6'}} onPress={() => navigation.push('LogInScreen')}> Login </Text>
+                                </Text>
+                            </TouchableOpacity>
+                            </>
+                    }
                 </>
                 )
             }

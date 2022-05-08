@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, Button, TextInput, TouchableOpacity,Alert } from 'react-native'
-import React from 'react'
+import { StyleSheet,ActivityIndicator, Text, View, Image, Button, TextInput, TouchableOpacity,Alert } from 'react-native'
+import React, { useState } from 'react'
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import {auth} from '../../firebase';
@@ -11,13 +11,16 @@ const uploadSchema = Yup.object().shape({
 
 const Form = ({navigation}) => {
 
-    
+     const [loading, isLoading] = useState(false);
 const login = async(email,password) => {
+    isLoading(true);
     try {
         console.log(email,password);
         await auth.signInWithEmailAndPassword(email,password);
         console.log("firebase login successful", email, password);
+        isLoading(false);
     } catch (error) {
+        isLoading(false);
         Alert.alert(error.message);
     }
 }
@@ -77,20 +80,28 @@ const forgotPassword = () => {
                         </Text>
                     }
                     
-                    <View style={styles.button}>
-                        <Button onPress={handleSubmit}  title="Login" />
-                    </View>
-                    
-                    
-                    <TouchableOpacity>
-                        <Text>
-                            Don't have an account?
-                        <Text style={{color:'#ADD8E6'}} onPress={() => navigation.push('SignUpScreen')}> Sign Up </Text>
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={forgotPassword}>
-                        <Text style={{color:'#ADD8E6'}}> Forgot Password? </Text>
-                    </TouchableOpacity>
+                    {
+                        loading
+                        ?
+                        <ActivityIndicator size="large" color='#ADD8E6'/>
+                        :
+                        <>
+                            <View style={styles.button}>
+                                <Button onPress={handleSubmit}  title="Login" />
+                            </View>
+                            
+                            
+                            <TouchableOpacity>
+                                <Text>
+                                    Don't have an account?
+                                <Text style={{color:'#ADD8E6'}} onPress={() => navigation.push('SignUpScreen')}> Sign Up </Text>
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={forgotPassword}>
+                                <Text style={{color:'#ADD8E6'}}> Forgot Password? </Text>
+                            </TouchableOpacity>
+                        </>
+                    }
                 </>
                 )
             }

@@ -159,16 +159,16 @@ const PostActions = ({data, liked,savePost,saved, updateLike}) => {
   )
 }
 
-const Comments = ({data}) => {
+export const Comments = ({data}) => {
   return(
     <>
     {
       data?.comments?.map(
-          value => (
-            <View style={{flexDirection:'row', alignItems:'center'}}>
+          (value, index) => {
+            return (<View key={index} style={{flexDirection:'row', alignItems:'center'}}>
               <Text style={{...styles.text, marginLeft: 5}}>{value?.user || 'Dummy User'} <Text style={styles.span}>{value?.comment}</Text> </Text>
-            </View>
-          )
+            </View>)
+          }
       )
     }
     </>

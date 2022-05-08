@@ -46,9 +46,18 @@ const Post = ({data}) => {
     })
   }
 
+  const deletePost = async(data) => {
+    await db.collection('users').doc(data.email).collection('posts').doc(data.docId)
+    .delete().then(() => {
+      console.log("Document successfully updated");
+    }).catch((err) => {
+      console.log("Error while updating document", err);
+    })
+  }
+
   return (
     <View style={styles.post}>
-        <PostHeader data={data}/>
+        <PostHeader data={data} deletePost={deletePost}/>
         <PostImage updateLike={updateLike} data={data}/>
         <PostFooter data={data} updateLike={updateLike} updateComment={updateComment}/>
     </View>
@@ -59,6 +68,6 @@ export default Post
 
 const styles = StyleSheet.create({
   post:{
-    // marginBottom: 30
+    marginBottom: 15
   }
 })
