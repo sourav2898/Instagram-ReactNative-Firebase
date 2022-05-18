@@ -48,7 +48,7 @@ const Post = ({data}) => {
   }
 
   const deletePost = async(data) => {
-    await db.collection('users').doc(data.email).collection('posts').doc(data.docId)
+    await db.collection('users').doc(data.email.toLowerCase()).collection('posts').doc(data.docId)
     .delete().then(() => {
       console.log("Document successfully updated");
     }).catch((err) => {

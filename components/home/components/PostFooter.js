@@ -38,8 +38,6 @@ const PostFooter = ({data, updateComment, updateLike}) => {
 
   const addComment = async () => {
     isLoading(true);
-    // getuser()
-    // console.log(user);
     await updateComment(data,{user: user, comment: comment})
     .then(() => {
       setComment('');
