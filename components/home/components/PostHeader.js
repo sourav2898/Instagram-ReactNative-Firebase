@@ -8,7 +8,7 @@ const PostHeader = ({data, deletePost}) => {
   const [loading, isLoading] = useState(false);
 
   useEffect(() => {
-    setEditable(auth.currentUser.email === data.email);
+    setEditable(auth.currentUser.email.toLowerCase() === data.email.toLowerCase());
   },[data])
 
   const delPost = async() => {

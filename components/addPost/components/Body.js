@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button, TextInput, Image, Alert } from 'react-native'
+import { StyleSheet,ActivityIndicator, Text, View, Button, TextInput, Image, Alert } from 'react-native'
 import React , {useEffect, useState} from 'react'
 import * as Yup from 'yup';
 import {Formik} from 'formik';
@@ -13,6 +13,7 @@ const Body = ({navigation}) => {
 
     const [thumbnail, setThumbnail] = useState('');
     const [currentUser, setCurrentUser] = useState({});
+    const [loading,isLoading] = useState(false);
 
     const getUser = () => {
         const user = auth.currentUser;
@@ -31,8 +32,9 @@ const Body = ({navigation}) => {
     },[])
 
     const postToFirebase = (imageUrl, caption) => {
+        isLoading(true);
         const unsubscribe = db.collection('users')
-                                .doc(auth.currentUser.email)
+                                .doc(auth.currentUser.email.toLowerCase())
                                 .collection('posts')
                                 .add({
                                     imageUrl: imageUrl,
@@ -44,8 +46,12 @@ const Body = ({navigation}) => {
                                     likes_by_users: [],
                                     comments: []
                                 })
-                                .then(() => navigation.goBack())
+                                .then(() => {
+                                    isLoading(false);
+                                    navigation.goBack()
+                                })
                                 .catch(err => {
+                                    isLoading(false);
                                     console.log("error posting", err);
                                     Alert.alert("Error: Not able to post", err);
                                 })
@@ -103,8 +109,14 @@ const Body = ({navigation}) => {
                         </Text>
                     }
 
-                    <Image style={styles.image} source={thumbnail!=='' && !errors.ImageUri ? {uri: thumbnail} : require('../../../assets/icons8-thumbnail-64.png')}/>
-                    <Button onPress={handleSubmit}  title="Share" />
+                    {/* <Image style={styles.image} source={thumbnail!=='' && !errors.ImageUri ? {uri: thumbnail} : require('../../../assets/icons8-thumbnail-64.png')}/> */}
+                    {
+                        loading
+                        ?
+                        <ActivityIndicator size="large" color='#ADD8E6'/>
+                        :
+                        <Button onPress={handleSubmit}  title="Share" />
+                    }
                 </>
                 )
             }
@@ -123,7 +135,7 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 5,
-        marginTop: 10,
+        marginVertical: 10,
         fontSize: 15
     },
     errorTextInput:{
@@ -132,7 +144,7 @@ const styles = StyleSheet.create({
         borderColor: 'crimson',
         borderWidth: 1,
         borderRadius: 5,
-        marginTop: 10,
+        marginVertical: 10,
         fontSize: 15
     },
     error:{

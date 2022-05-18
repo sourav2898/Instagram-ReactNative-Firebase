@@ -13,7 +13,7 @@ const PostFooter = ({data, updateComment, updateLike}) => {
 
   useEffect(() => {
     const likes = data?.likes_by_users;
-    setLiked(likes.includes(auth.currentUser.email))
+    setLiked(likes.includes(auth.currentUser.email.toLowerCase()))
 
     getuser();  
     getSavedPost();
@@ -21,14 +21,14 @@ const PostFooter = ({data, updateComment, updateLike}) => {
 
   const getuser = async() => {
     await db.collection('users').onSnapshot(snapshot => {
-      const arr = snapshot.docs.map(doc => doc.data());
+      const arr = snapshot.docs.map(doc => doc?.data());
 
-      setUser(arr.filter((val) => val.email === auth.currentUser.email)[0].username);
+      setUser(arr?.filter((val) => val?.email.toLowerCase() === auth?.currentUser?.email.toLowerCase())?.[0]?.username);
     });
   }
 
   const getSavedPost = async() => {
-      await db.collection('users').doc(auth.currentUser.email).collection("savedPosts").onSnapshot(snapshot => {
+      await db.collection('users').doc(auth.currentUser.email.toLowerCase()).collection("savedPosts").onSnapshot(snapshot => {
         const posts = snapshot.docs.map(doc => doc.data());
         
         if(posts.find(val => val.docId === data.docId)) setSaved(true);
@@ -38,6 +38,8 @@ const PostFooter = ({data, updateComment, updateLike}) => {
 
   const addComment = async () => {
     isLoading(true);
+    // getuser()
+    // console.log(user);
     await updateComment(data,{user: user, comment: comment})
     .then(() => {
       setComment('');
@@ -54,7 +56,7 @@ const PostFooter = ({data, updateComment, updateLike}) => {
   const savePost = async() => {
     if(saved){
        const unsubscribe = await db.collection('users')
-                              .doc(auth.currentUser.email)
+                              .doc(auth.currentUser.email.toLowerCase())
                               .collection('savedPosts')
                               .doc(data.docId)
                               .delete()
@@ -71,7 +73,7 @@ const PostFooter = ({data, updateComment, updateLike}) => {
     }
     else{
       const unsubscribe = await db.collection('users')
-                              .doc(auth.currentUser.email)
+                              .doc(auth.currentUser.email.toLowerCase())
                               .collection('savedPosts')
                               .doc(data.docId)
                               .set({

@@ -13,15 +13,15 @@ const Post = ({data}) => {
 
   const updateLike = async(data) => {
     let likd_user = data.likes_by_users;
-    if(likd_user.includes(auth.currentUser.email)){
+    if(likd_user.includes(auth.currentUser.email.toLowerCase())){
         likd_user = likd_user.filter((email) => {
-            email!=auth.currentUser.email
+            email!=auth.currentUser.email.toLowerCase()
         })
     }else{
-      likd_user.push(auth.currentUser.email);
+      likd_user.push(auth.currentUser.email.toLowerCase());
     }
     
-    await db.collection('users').doc(data.email).collection('posts').doc(data.docId)
+    await db.collection('users').doc(data?.email?.toLowerCase()).collection('posts').doc(data.docId)
     .update({
       likes_by_users: likd_user
     }).then(() => {
@@ -35,8 +35,9 @@ const Post = ({data}) => {
 
     let comments = [...data?.comments, comment]
     console.log(comments)
+    console.log(data.docId);
 
-    await db.collection('users').doc(data.email).collection('posts').doc(data.docId)
+    await db.collection('users').doc(data?.email?.toLowerCase()).collection('posts').doc(data.docId)
     .update({
       comments: comments
     }).then(() => {
